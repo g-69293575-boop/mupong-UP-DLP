@@ -1,0 +1,386 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2822
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 <!DOCTYPE html>\
+<html lang="ms">\
+<head>\
+    <meta charset="UTF-8">\
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">\
+    <title>Dashboard Analisis Peperiksaan UP-DLP SK Mupong 2025</title>\
+    <script src="https://cdn.tailwindcss.com"></script>\
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>\
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>\
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">\
+    <style>\
+        body \{\
+            font-family: 'Inter', sans-serif;\
+        \}\
+        .chart-container \{\
+            position: relative;\
+            height: 350px;\
+            width: 100%;\
+        \}\
+        .metric-card \{\
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;\
+        \}\
+        .metric-card:hover \{\
+            transform: translateY(-5px);\
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);\
+        \}\
+        .loader \{\
+            border: 4px solid #f3f3f3;\
+            border-radius: 50%;\
+            border-top: 4px solid #3498db;\
+            width: 24px;\
+            height: 24px;\
+            animation: spin 1s linear infinite;\
+        \}\
+        @keyframes spin \{\
+            0% \{ transform: rotate(0deg); \}\
+            100% \{ transform: rotate(360deg); \}\
+        \}\
+    </style>\
+</head>\
+<body class="bg-gradient-to-br from-yellow-50 via-red-50 to-orange-100 p-4 sm:p-6 md:p-8">\
+\
+    <div class="max-w-7xl mx-auto">\
+        <!-- Header -->\
+        <div class="mb-8 text-center flex flex-col items-center">\
+            <img src="http://googleusercontent.com/file_content/1" alt="Logo Sekolah" class="h-24 w-24 mb-4">\
+            <h1 class="text-4xl font-bold text-gray-800 tracking-tight">Dashboard Analisis Peperiksaan</h1>\
+            <p class="text-lg text-gray-600 mt-2">UP-DLP SK Mupong (Tahun 6 2025)</p>\
+            <button id="generateSummaryBtn" class="mt-4 bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">\
+                \uc0\u10024  Jana Rumusan Prestasi\
+            </button>\
+        </div>\
+\
+        <!-- Key Metrics -->\
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">\
+            <div class="bg-white p-6 rounded-xl shadow-md flex items-center justify-between metric-card">\
+                <div>\
+                    <p class="text-sm font-medium text-gray-500">Jumlah Murid</p>\
+                    <p id="total-students" class="text-3xl font-bold text-gray-800">0</p>\
+                </div>\
+                <div class="bg-blue-100 text-blue-600 p-4 rounded-full">\
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>\
+                </div>\
+            </div>\
+            <div class="bg-white p-6 rounded-xl shadow-md flex items-center justify-between metric-card">\
+                <div>\
+                    <p class="text-sm font-medium text-gray-500">Peratus Lulus</p>\
+                    <p id="pass-percentage" class="text-3xl font-bold text-green-600">0%</p>\
+                </div>\
+                <div class="bg-green-100 text-green-600 p-4 rounded-full">\
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path></svg>\
+                </div>\
+            </div>\
+            <div class="bg-white p-6 rounded-xl shadow-md flex items-center justify-between metric-card">\
+                <div>\
+                    <p class="text-sm font-medium text-gray-500">Skor Purata</p>\
+                    <p id="average-score" class="text-3xl font-bold text-gray-800">0</p>\
+                </div>\
+                 <div class="bg-yellow-100 text-yellow-600 p-4 rounded-full">\
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>\
+                </div>\
+            </div>\
+            <div class="bg-white p-6 rounded-xl shadow-md flex items-center justify-between metric-card">\
+                <div>\
+                    <p class="text-sm font-medium text-gray-500">Murid Cemerlang</p>\
+                    <p id="excellent-students" class="text-3xl font-bold text-purple-600">0</p>\
+                </div>\
+                <div class="bg-purple-100 text-purple-600 p-4 rounded-full">\
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path><path d="M12 22V18M12 18H8C6.34315 18 5 16.6569 5 15V13C5 11.3431 6.34315 10 8 10H16C17.6569 10 19 11.3431 19 13V15C19 16.6569 17.6569 18 16 18H12ZM12 18V10M8 10V6C8 3.79086 9.79086 2 12 2C14.2091 2 16 3.79086 16 6V10M8 10H5M16 10H19"></path></svg>\
+                </div>\
+            </div>\
+        </div>\
+\
+        <!-- Charts -->\
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 mb-8">\
+            <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-md">\
+                <h3 class="text-lg font-semibold text-gray-700 mb-4">Prestasi Gred Keseluruhan</h3>\
+                <div class="chart-container">\
+                    <canvas id="overallGradeChart"></canvas>\
+                </div>\
+            </div>\
+            <div class="lg:col-span-3 bg-white p-6 rounded-xl shadow-md">\
+                <h3 class="text-lg font-semibold text-gray-700 mb-4">Taburan Gred Mengikut Subjek</h3>\
+                <div class="chart-container">\
+                    <canvas id="subjectGradeDistributionChart"></canvas>\
+                </div>\
+            </div>\
+        </div>\
+\
+        <!-- Student List -->\
+        <div class="bg-white p-6 rounded-xl shadow-md">\
+            <div class="flex flex-col sm:flex-row justify-between items-center mb-4">\
+                <h3 class="text-lg font-semibold text-gray-700 mb-2 sm:mb-0">Senarai Keputusan Murid</h3>\
+                <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Cari nama murid..." class="w-full sm:w-64 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">\
+            </div>\
+            <div class="overflow-x-auto">\
+                <table id="studentsTable" class="w-full text-sm text-left text-gray-600">\
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">\
+                        <tr>\
+                            <th scope="col" class="px-6 py-3 rounded-l-lg">Nama Murid</th>\
+                            <th scope="col" class="px-6 py-3 text-center">English</th>\
+                            <th scope="col" class="px-6 py-3 text-center">Maths</th>\
+                            <th scope="col" class="px-6 py-3 text-center">Science</th>\
+                            <th scope="col" class="px-6 py-3 text-center">Purata</th>\
+                            <th scope="col" class="px-6 py-3 text-center">Gred Keseluruhan</th>\
+                            <th scope="col" class="px-6 py-3 text-center rounded-r-lg">Tindakan</th>\
+                        </tr>\
+                    </thead>\
+                    <tbody id="studentsTableBody">\
+                        <!-- Rows will be inserted by JavaScript -->\
+                    </tbody>\
+                </table>\
+            </div>\
+        </div>\
+    </div>\
+\
+    <!-- Modals -->\
+    <div id="modalBackdrop" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-40"></div>\
+    \
+    <!-- Modal Intervensi -->\
+    <div id="interventionModal" class="fixed inset-0 overflow-y-auto h-full w-full hidden z-50">\
+        <div class="relative top-20 mx-auto p-5 border w-full max-w-lg shadow-lg rounded-xl bg-white">\
+            <div class="flex justify-between items-center pb-3 border-b">\
+                <p class="text-2xl font-bold text-gray-700">Cadangan Intervensi</p>\
+                <div class="cursor-pointer z-50" onclick="closeModal('interventionModal')">\
+                    <svg class="fill-current text-black" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 18 18"><path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path></svg>\
+                </div>\
+            </div>\
+            <div class="mt-4">\
+                <p class="text-sm text-gray-600 mb-1">Untuk murid:</p>\
+                <h3 id="modalStudentName" class="text-xl font-semibold text-gray-800 mb-4"></h3>\
+                <div id="modalInterventionDetails" class="space-y-4"></div>\
+                <div id="geminiInterventionResult" class="mt-4 p-3 bg-purple-50 rounded-lg border border-purple-200 hidden"></div>\
+                 <div id="interventionLoader" class="flex justify-center items-center mt-4 hidden"><div class="loader"></div></div>\
+            </div>\
+            <div class="flex justify-between items-center pt-4 mt-4 border-t">\
+                <button id="generateGeminiInterventionBtn" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-3 rounded-lg text-xs transition duration-200">\uc0\u10024  Jana Cadangan Lanjutan</button>\
+                <button onclick="closeModal('interventionModal')" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 font-semibold">Tutup</button>\
+            </div>\
+        </div>\
+    </div>\
+\
+    <!-- Modal Rumusan -->\
+    <div id="summaryModal" class="fixed inset-0 overflow-y-auto h-full w-full hidden z-50">\
+        <div class="relative top-20 mx-auto p-5 border w-full max-w-lg shadow-lg rounded-xl bg-white">\
+            <div class="flex justify-between items-center pb-3 border-b">\
+                <p class="text-2xl font-bold text-gray-700">Rumusan Prestasi Kelas</p>\
+                <div class="cursor-pointer z-50" onclick="closeModal('summaryModal')">\
+                    <svg class="fill-current text-black" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 18 18"><path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path></svg>\
+                </div>\
+            </div>\
+            <div class="mt-4">\
+                <div id="summaryLoader" class="flex justify-center items-center"><div class="loader"></div></div>\
+                <div id="summaryResult" class="text-gray-700 leading-relaxed"></div>\
+            </div>\
+             <div class="flex justify-end pt-4 mt-4 border-t">\
+                <button onclick="closeModal('summaryModal')" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 font-semibold">Tutup</button>\
+            </div>\
+        </div>\
+    </div>\
+\
+<script>\
+// Data CSV yang disematkan dari fail yang dimuat naik\
+const csvData = `SEKOLAH KEBANGSAAN MUPONG,,,,,,,,,,,,,,,,,,,,\
+"96500 BINTANGOR, SARAWAK",,,,,,,,,,,,,,,,,,,,\
+PRA UPDLP 1,,,,,,,,,,,,,,,,,,,,\
+TAHUN 6 2025,,,,,,,,,,,,,,,,,,,,\
+,,,,,,,,,,,,,,,,,,,,\
+,BIL ,NO.KP,NAMA MURID,ENGLISH,,MATHS,,SCIENCE,,JUMLAH GRED,,,,,,,,,,\
+,,,,M,G,M,G,M,G,A,B,C,D,E,TH,,,,MARKAH,GRED\
+,2,130430-13-0127,DAVE DARVIN AK TOMY,52,C,50,C,52,C,0,0,3,0,0,0,,,,51,C\
+,3,130428-01-1276,HENG WINCCI MAYLI,50,C,42,D,38,D,0,0,1,2,0,0,,,,43,D\
+,1,130903-13-0419,ALEXSANDRA ERICSON TUKAU AK EVELYN UMANG,38,D,30,E,28,E,0,0,0,1,2,0,,,,32,E\
+,4,130807-13-1278,LEDEYANA ANAK BANGIE,36,D,46,D,32,E,0,0,0,2,1,0,,,,38,E\
+,5,130708-13-0997,NICKHOLAS AK SELAN,42,D,32,E,44,D,0,0,0,2,1,0,,,,39,E\
+`;\
+\
+let studentsData = [];\
+\
+const interventionSuggestions = \{\
+    English: ["Latih tubi kosa kata (vocabulary) harian.", "Program membaca 15 minit setiap hari.", "Latihan tatabahasa (grammar) berfokus."],\
+    Maths: ["Pengukuhan sifir dan operasi asas.", "Latihan penyelesaian masalah menggunakan kaedah visual.", "Sesi 'drilling' untuk topik-topik lemah."],\
+    Science: ["Membuat peta minda atau kad imbas untuk istilah sains.", "Menonton video eksperimen sains.", "Mengaitkan konsep sains dengan kehidupan seharian."]\
+\};\
+\
+// --- Gemini API Function ---\
+async function callGeminiAPI(prompt) \{\
+    const apiKey = ""; // API key will be automatically provided by the environment\
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=$\{apiKey\}`;\
+    \
+    const payload = \{\
+        contents: [\{ parts: [\{ text: prompt \}] \}]\
+    \};\
+\
+    try \{\
+        const response = await fetch(apiUrl, \{\
+            method: 'POST',\
+            headers: \{ 'Content-Type': 'application/json' \},\
+            body: JSON.stringify(payload)\
+        \});\
+        if (!response.ok) \{\
+            throw new Error(`API request failed with status $\{response.status\}`);\
+        \}\
+        const result = await response.json();\
+        return result.candidates[0].content.parts[0].text;\
+    \} catch (error) \{\
+        console.error("Gemini API call failed:", error);\
+        return "Maaf, terdapat ralat semasa menjana cadangan. Sila cuba lagi.";\
+    \}\
+\}\
+\
+// --- Utility & Modal Functions ---\
+const getGrade = (mark) => \{\
+    if (isNaN(mark) || mark < 0) return 'TH';\
+    if (mark >= 80) return 'A'; if (mark >= 65) return 'B'; if (mark >= 50) return 'C'; if (mark >= 40) return 'D'; return 'E';\
+\};\
+const getGradeColor = (grade) => \{\
+    const colors = \{ A: 'bg-green-100 text-green-800', B: 'bg-blue-100 text-blue-800', C: 'bg-yellow-100 text-yellow-800', D: 'bg-orange-100 text-orange-800', E: 'bg-red-100 text-red-800' \};\
+    return colors[grade] || 'bg-gray-100 text-gray-800';\
+\};\
+\
+const modalBackdrop = document.getElementById('modalBackdrop');\
+function openModal(modalId) \{\
+    document.getElementById(modalId).style.display = 'block';\
+    modalBackdrop.style.display = 'block';\
+\}\
+function closeModal(modalId) \{\
+    document.getElementById(modalId).style.display = 'none';\
+    modalBackdrop.style.display = 'none';\
+\}\
+\
+// --- Event Listeners & Main Logic ---\
+document.getElementById('generateSummaryBtn').addEventListener('click', async () => \{\
+    openModal('summaryModal');\
+    const summaryResult = document.getElementById('summaryResult');\
+    const summaryLoader = document.getElementById('summaryLoader');\
+    summaryLoader.style.display = 'flex';\
+    summaryResult.innerHTML = '';\
+\
+    const total = document.getElementById('total-students').textContent;\
+    const pass = document.getElementById('pass-percentage').textContent;\
+    const avg = document.getElementById('average-score').textContent;\
+    const exc = document.getElementById('excellent-students').textContent;\
+\
+    const prompt = `Anda adalah seorang Guru Besar. Berdasarkan data berikut: Jumlah Murid=$\{total\}, Peratus Lulus=$\{pass\}, Skor Purata=$\{avg\}, Murid Cemerlang=$\{exc\}. Tuliskan satu rumusan ringkas (tidak lebih dari 3 ayat) mengenai prestasi kelas Tahun 6 ini dalam Bahasa Melayu. Berikan nada yang profesional tetapi membina.`;\
+    \
+    const result = await callGeminiAPI(prompt);\
+    summaryResult.innerHTML = result.replace(/\\n/g, '<br>');\
+    summaryLoader.style.display = 'none';\
+\});\
+\
+document.getElementById('generateGeminiInterventionBtn').addEventListener('click', async function() \{\
+    const studentIndex = this.dataset.studentIndex;\
+    const student = studentsData[studentIndex];\
+    if (!student) return;\
+\
+    const loader = document.getElementById('interventionLoader');\
+    const resultContainer = document.getElementById('geminiInterventionResult');\
+    loader.style.display = 'flex';\
+    resultContainer.style.display = 'none';\
+\
+    const failedSubjects = [];\
+    if (student.english.grade === 'E') failedSubjects.push('English');\
+    if (student.maths.grade === 'E') failedSubjects.push('Maths');\
+    if (student.science.grade === 'E') failedSubjects.push('Science');\
+\
+    const prompt = `Anda adalah seorang guru pakar. Berikan 3 cadangan intervensi yang kreatif dan menyeronokkan untuk seorang murid bernama $\{student.name\} yang lemah dalam subjek $\{failedSubjects.join(', ')\}. Formatkan jawapan sebagai senarai bernombor dalam Bahasa Melayu.`;\
+\
+    const result = await callGeminiAPI(prompt);\
+    resultContainer.innerHTML = result.replace(/\\n/g, '<br>');\
+    loader.style.display = 'none';\
+    resultContainer.style.display = 'block';\
+\});\
+\
+function setupInterventionModal(studentIndex) \{\
+    const student = studentsData[studentIndex];\
+    if (!student) return;\
+\
+    document.getElementById('modalStudentName').textContent = student.name;\
+    const detailsContainer = document.getElementById('modalInterventionDetails');\
+    detailsContainer.innerHTML = '';\
+    \
+    document.getElementById('geminiInterventionResult').style.display = 'none';\
+    document.getElementById('generateGeminiInterventionBtn').dataset.studentIndex = studentIndex;\
+\
+    const createSuggestionBlock = (subject, suggestions) => \{\
+        let listItems = suggestions.map(s => `<li class="text-gray-600">$\{s\}</li>`).join('');\
+        return `<div class="p-3 bg-gray-50 rounded-lg"><h4 class="font-semibold text-gray-800">$\{subject\}</h4><ul class="list-disc list-inside mt-2 space-y-1 text-sm">$\{listItems\}</ul></div>`;\
+    \};\
+\
+    if (student.english.grade === 'E') detailsContainer.innerHTML += createSuggestionBlock('English', interventionSuggestions.English);\
+    if (student.maths.grade === 'E') detailsContainer.innerHTML += createSuggestionBlock('Maths', interventionSuggestions.Maths);\
+    if (student.science.grade === 'E') detailsContainer.innerHTML += createSuggestionBlock('Science', interventionSuggestions.Science);\
+\
+    openModal('interventionModal');\
+\}\
+\
+window.onload = function() \{\
+    const data = Papa.parse(csvData, \{ header: false \}).data;\
+    let dataStartIndex = 0;\
+    for (let i = 0; i < data.length; i++) \{\
+        if (data[i][1] && data[i][1].trim().toUpperCase() === 'BIL') \{ dataStartIndex = i + 2; break; \}\
+    \}\
+\
+    studentsData = data.slice(dataStartIndex).map(row => \{\
+        if (row.length < 9 || !row[3]) return null;\
+        const name = row[3].trim(); if (!name) return null;\
+        const englishMark = parseInt(row[4], 10), mathsMark = parseInt(row[6], 10), scienceMark = parseInt(row[8], 10);\
+        const validMarks = [englishMark, mathsMark, scienceMark].filter(m => !isNaN(m));\
+        const average = validMarks.length > 0 ? validMarks.reduce((a, b) => a + b, 0) / validMarks.length : 0;\
+        return \{ name, english: \{ mark: englishMark, grade: getGrade(englishMark) \}, maths: \{ mark: mathsMark, grade: getGrade(mathsMark) \}, science: \{ mark: scienceMark, grade: getGrade(scienceMark) \}, average, overallGrade: getGrade(average) \};\
+    \}).filter(s => s !== null);\
+\
+    const totalStudents = studentsData.length;\
+    const passingStudents = studentsData.filter(s => s.overallGrade !== 'E' && s.overallGrade !== 'TH').length;\
+    document.getElementById('total-students').textContent = totalStudents;\
+    document.getElementById('pass-percentage').textContent = `$\{totalStudents > 0 ? ((passingStudents / totalStudents) * 100).toFixed(1) : 0\}%`;\
+    document.getElementById('average-score').textContent = `$\{totalStudents > 0 ? (studentsData.reduce((acc, s) => acc + s.average, 0) / totalStudents).toFixed(1) : 0\}`;\
+    document.getElementById('excellent-students').textContent = studentsData.filter(s => s.english.grade === 'A' && s.maths.grade === 'A' && s.science.grade === 'A').length;\
+\
+    const overallGradeCounts = \{ A: 0, B: 0, C: 0, D: 0, E: 0 \};\
+    studentsData.forEach(s => \{ if (overallGradeCounts[s.overallGrade] !== undefined) overallGradeCounts[s.overallGrade]++; \});\
+    const subjectGradeCounts = \{ English: \{ A: 0, B: 0, C: 0, D: 0, E: 0 \}, Maths: \{ A: 0, B: 0, C: 0, D: 0, E: 0 \}, Science: \{ A: 0, B: 0, C: 0, D: 0, E: 0 \}\};\
+    studentsData.forEach(s => \{\
+        if (subjectGradeCounts.English[s.english.grade] !== undefined) subjectGradeCounts.English[s.english.grade]++;\
+        if (subjectGradeCounts.Maths[s.maths.grade] !== undefined) subjectGradeCounts.Maths[s.maths.grade]++;\
+        if (subjectGradeCounts.Science[s.science.grade] !== undefined) subjectGradeCounts.Science[s.science.grade]++;\
+    \});\
+\
+    new Chart(document.getElementById('overallGradeChart').getContext('2d'), \{ type: 'doughnut', data: \{ labels: ['A', 'B', 'C', 'D', 'E'], datasets: [\{ data: Object.values(overallGradeCounts), backgroundColor: ['#4ade80', '#60a5fa', '#facc15', '#fb923c', '#f87171'], borderColor: '#ffffff', borderWidth: 3 \}] \}, options: \{ responsive: true, maintainAspectRatio: false, plugins: \{ legend: \{ position: 'top' \} \} \} \});\
+    new Chart(document.getElementById('subjectGradeDistributionChart').getContext('2d'), \{ type: 'bar', data: \{ labels: ['English', 'Maths', 'Science'], datasets: [ \{ label: 'A', data: [subjectGradeCounts.English.A, subjectGradeCounts.Maths.A, subjectGradeCounts.Science.A], backgroundColor: '#4ade80' \}, \{ label: 'B', data: [subjectGradeCounts.English.B, subjectGradeCounts.Maths.B, subjectGradeCounts.Science.B], backgroundColor: '#60a5fa' \}, \{ label: 'C', data: [subjectGradeCounts.English.C, subjectGradeCounts.Maths.C, subjectGradeCounts.Science.C], backgroundColor: '#facc15' \}, \{ label: 'D', data: [subjectGradeCounts.English.D, subjectGradeCounts.Maths.D, subjectGradeCounts.Science.D], backgroundColor: '#fb923c' \}, \{ label: 'E', data: [subjectGradeCounts.English.E, subjectGradeCounts.Maths.E, subjectGradeCounts.Science.E], backgroundColor: '#f87171' \} ] \}, options: \{ responsive: true, maintainAspectRatio: false, scales: \{ x: \{ stacked: true \}, y: \{ stacked: true, beginAtZero: true \} \}, plugins: \{ legend: \{ position: 'top' \} \} \} \});\
+    \
+    const tableBody = document.getElementById('studentsTableBody');\
+    studentsData.forEach((s, index) => \{\
+        const row = document.createElement('tr');\
+        row.className = 'bg-white border-b hover:bg-gray-50';\
+        const formatMark = (mark) => isNaN(mark) ? 'TH' : mark;\
+        let needsIntervention = s.english.grade === 'E' || s.maths.grade === 'E' || s.science.grade === 'E';\
+        let interventionButtonHTML = needsIntervention ? `<button onclick="setupInterventionModal($\{index\})" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-3 rounded-lg text-xs transition duration-200">Intervensi</button>` : '-';\
+        row.innerHTML = `<td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">$\{s.name\}</td> <td class="px-6 py-4 text-center">$\{formatMark(s.english.mark)\} <span class="font-semibold px-2 py-1 text-xs rounded-full $\{getGradeColor(s.english.grade)\}">$\{s.english.grade\}</span></td> <td class="px-6 py-4 text-center">$\{formatMark(s.maths.mark)\} <span class="font-semibold px-2 py-1 text-xs rounded-full $\{getGradeColor(s.maths.grade)\}">$\{s.maths.grade\}</span></td> <td class="px-6 py-4 text-center">$\{formatMark(s.science.mark)\} <span class="font-semibold px-2 py-1 text-xs rounded-full $\{getGradeColor(s.science.grade)\}">$\{s.science.grade\}</span></td> <td class="px-6 py-4 text-center font-semibold">$\{s.average.toFixed(1)\}</td> <td class="px-6 py-4 text-center"><span class="font-bold px-3 py-1.5 text-sm rounded-full $\{getGradeColor(s.overallGrade)\}">$\{s.overallGrade\}</span></td> <td class="px-6 py-4 text-center">$\{interventionButtonHTML\}</td>`;\
+        tableBody.appendChild(row);\
+    \});\
+\};\
+\
+function filterTable() \{\
+    const filter = document.getElementById("searchInput").value.toUpperCase();\
+    const tr = document.getElementById("studentsTable").getElementsByTagName("tr");\
+    for (let i = 1; i < tr.length; i++) \{\
+        const td = tr[i].getElementsByTagName("td")[0];\
+        if (td) \{\
+            tr[i].style.display = (td.textContent || td.innerText).toUpperCase().indexOf(filter) > -1 ? "" : "none";\
+        \}\
+    \}\
+\}\
+</script>\
+\
+</body>\
+</html>\
+}
